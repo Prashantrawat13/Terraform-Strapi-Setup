@@ -1,11 +1,16 @@
 variable "vpc-id" {}
-variable public-subnet {}
-variable private-subnet {}
+# variable public-subnet {}
+# variable private-subnet {}
 variable "bastion-sg" {}
-variable "external-lb-sg" {}
 variable "web-tier-sg" {}
-variable "internal-lb-sg" {}
 variable "app-tier-sg" {}
+variable "public_subnet" {
+  type = list(string)
+}
+
+variable "private_subnet" {
+  type = list(string)
+}
 
 
 ####### Bastion Host Variables #######
@@ -15,11 +20,6 @@ variable "bastion-host-key" {
   type        = string
 }
 
-variable "public-key-path" {
-  description = "Path to the public key file for Bastion Host"
-  type        = string
-  default = "${path.module}/keys/id_rsa.pub"
-}
 
 variable "bastion-ec2-ami" {
   description = "AMI ID for Bastion Host EC2 Instance"
@@ -58,3 +58,12 @@ variable "app-ec2-instance-type" {
   description = "Instance Type for App Tier EC2 Instance"
   type        = string
 }
+
+
+
+
+
+variable "web_alb_tg_arn" {}
+
+variable "app_alb_tg_arn" {}
+
