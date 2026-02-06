@@ -53,10 +53,9 @@ The architecture includes a **Web Tier** and an **Application Tier**, along with
 - **Bastion Host** → Separate Launch Template, Auto Scaling Group, and Security Group for secure access  
 
 ---
-***
+---
 
 ## Project Structure
-
 
 - `modules/` – Contains reusable modules for compute, networking, and ALB  
 - `modules/compute/keys/` – Stores private keys (**ignored by Git**)  
@@ -78,39 +77,39 @@ The architecture includes a **Web Tier** and an **Application Tier**, along with
 
 1. **Clone the repository:**
 
-```bash
-git clone <https://github.com/Prashantrawat13/Terraform-Strapi-Setup.git>
-cd <Terraform-Strapi-Setup>     # Now we are in the root directory of the project
-cd terraform           # Change to the terraform directory where the main configuration files are located
-```
+    ```bash
+    git clone <https://github.com/Prashantrawat13/Terraform-Strapi-Setup.git>
+    cd <Terraform-Strapi-Setup>     # Now we are in the root directory of the project
+    cd terraform           # Change to the terraform directory where the main configuration files are located
+    ```
 
 2. **Initialize Terraform:**
 
-```bash
-terraform init
-```
+    ```bash
+    terraform init
+    ```
 
 3. **Validate the configuration:**
 
-```bash
-terraform validate
-```
+    ```bash
+    terraform validate
+    ```
 
 4. **Plan the deployment:**
 
-```bash
-terraform plan
-```
+    ```bash
+    terraform plan
+    ```
 
 5. **Apply the Terraform configuration:**
 
-```bash
-terraform apply
-```
+    ```bash
+    terraform apply
+    ```
 
 6. **Verify resources in the AWS console (VPC, subnets, ALBs, EC2 instances, Security Groups, ASGs).**
 
-***
+---
 
 ### **Keys Points / Best Practices**
 
@@ -126,7 +125,7 @@ terraform apply
 
 - **TAGGING**: Resources are tagged appropriately for better organization and cost management.
 
-***
+---
 
 ## Cleanup
 
@@ -145,7 +144,7 @@ terraform destroy
   [Official Terraform AWS Provider Documentation:](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
 
 - **AWS VPC, Subnets, and Networking**  
- 
+
   - [VPC](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)  
   
   - [Subnets](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Subnets.html)  
