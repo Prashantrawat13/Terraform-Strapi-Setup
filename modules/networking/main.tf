@@ -3,7 +3,7 @@
 resource "aws_vpc" "my_vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
-  enable_dns_support = "us-east-1"
+  enable_dns_support = "ap-south-1"
   tags = {
     Name = "My_VPC"
   }
@@ -134,7 +134,7 @@ resource "aws_route_table_association" "private_rt_1" {
 
 ####### Security Group #######      || Web-Tier Security Group
 
-resource "aws_security_group" "Bastion-Host-SG" {
+resource "aws_security_group" "bastion-host-sg" {
   name        = "Bastion_Host_SG"
   description = "Allow SSH Inbound Traffic from set of IP addresse"
   vpc_id      = aws_vpc.my_vpc.id
@@ -164,7 +164,7 @@ resource "aws_security_group" "Bastion-Host-SG" {
 
 ####### Security Group #######      || LB-SG
 
-resource "aws_security_group" "External-LB-SG" {
+resource "aws_security_group" "external-lb-sg" {
   name        = "External_LB_SG"
   description = "Allow HTTP and HTTPS Inbound Traffic from Internet"
   vpc_id      = aws_vpc.my_vpc.id
@@ -204,26 +204,26 @@ resource "aws_security_group" "External-LB-SG" {
 ####### Security Group #######      || Web-Tier SG
 
 
-resource "aws_security_group" "Web-Tier-SG" {
+resource "aws_security_group" "web-tier-sg" {
 
   name        = "Web_Tier_SG"
-  description = "Allow HTTP and HTTPS Inbound Traffic from External-LB-SG"
+  description = "Allow HTTP and HTTPS Inbound Traffic from external-lb-sg"
   vpc_id      = aws_vpc.my_vpc.id
 
   ingress {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    description     = "Allow Http inbound traffic from External-LB-SG"
-    security_groups = [aws_security_group.External-LB-SG.id]
+    description     = "Allow Http inbound traffic from external-lb-sg"
+    security_groups = [aws_security_group.external-lb-sg.id]
   }
 
   ingress {
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
-    description     = "Allow Https inbound traffic from External-LB-SG"
-    security_groups = [aws_security_group.External-LB-SG.id] 
+    description     = "Allow Https inbound traffic from external-lb-sg"
+    security_groups = [aws_security_group.external-lb-sg.id] 
   }
 
 
@@ -245,7 +245,7 @@ resource "aws_security_group" "Web-Tier-SG" {
 ####### Security Group #######      || Internal-LB-SG
 
 
-resource "aws_security_group" "Internal-LB-SG" {
+resource "aws_security_group" "internal-lb-sg" {
 
   name        = "Internal_LB_SG"
   description = "Allow All Traffic from the Web-Tier SG"
@@ -256,7 +256,7 @@ resource "aws_security_group" "Internal-LB-SG" {
     to_port         = 80
     protocol        = "tcp"
     description     = "Allow http inbound traffic from Internal SG"
-    security_groups = [aws_security_group.Web-Tier-SG.id]
+    security_groups = [aws_security_group.web-tier-sg.id]
   }
 
   ingress {
@@ -264,7 +264,7 @@ resource "aws_security_group" "Internal-LB-SG" {
     to_port         = 443
     protocol        = "tcp"
     description     = "Allow https inbound traffic from Internal SG"
-    security_groups = [aws_security_group.Web-Tier-SG.id] 
+    security_groups = [aws_security_group.web-tier-sg.id] 
   }
 
   egress {
@@ -281,7 +281,7 @@ resource "aws_security_group" "Internal-LB-SG" {
 ####### Security Group #######      || App-Tier-SG
 
 
-resource "aws_security_group" "App-Tier-SG" {
+resource "aws_security_group" "app-tier-sg" {
   name        = "App_Tier_SG"
   description = "Allow All Traffic from the Internal-LB-SG" 
   vpc_id      = aws_vpc.my_vpc.id
@@ -290,16 +290,16 @@ resource "aws_security_group" "App-Tier-SG" {
     from_port       = 80
     to_port         = 80
     protocol        = "tcp"
-    description     = "Allow http inbound traffic from Internal-LB-SG"
-    security_groups = [aws_security_group.Internal-LB-SG.id]
+    description     = "Allow http inbound traffic from internal-lb-sg"
+    security_groups = [aws_security_group.internal-lb-sg.id]
   }
 
   ingress {
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
-    description     = "Allow https inbound traffic from Internal-LB-SG"
-    security_groups = [aws_security_group.Internal-LB-SG.id] 
+    description     = "Allow https inbound traffic from internal-lb-sg"
+    security_groups = [aws_security_group.internal-lb-sg.id] 
   }
 
   egress {
