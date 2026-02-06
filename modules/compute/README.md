@@ -16,6 +16,7 @@ Now we'll be seeing the services used in this module.
 
 - Launch Template for Web Servers
 - Auto Scaling Group for Web Servers
+- Written User Data for Web Servers to install and configure Nginx Web Server using Docker.
   
 ### This is the list of services created for Application servers
 
