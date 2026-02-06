@@ -1,0 +1,8 @@
+output "web-tier-asg" {
+    value = aws_autoscaling_group.web_tier_asg.id  
+}
+
+
+output "app-tier-asg" {
+    value = aws_autoscaling_group.app_tier_asg.id  
+}
