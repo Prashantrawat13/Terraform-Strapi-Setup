@@ -7,7 +7,7 @@ public_sub_count = 3
 
 private_sub_count = 3
 
-access-ip = "Put_your_public_ip_here/32"
+access-ip = "Put your IP address here/32"
 
 
 

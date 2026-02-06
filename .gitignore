@@ -1,0 +1,17 @@
+# Terraform file to ignore files that should not be tracked by version control
+# Ignore Terraform state files
+*.tfstate
+*.tfstate.backup
+
+# Ignore Terraform  Lock hcl files
+*.lock.hcl
+
+# Ignore the .terraform directory which contains the modules and plugins
+.terraform/
+
+
+# Now we'll ignore the keys that are in the compute module, 
+# as they may contain sensitive information like private keys for the bastion host and web servers.
+
+# Ignore the key for the bastion host
+/modules/compute/keys/
