@@ -29,7 +29,7 @@ resource "aws_lb" "web_alb" {
   name               = "external-web-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = var.external-lb-sg
+  security_groups    = [var.external-lb-sg]
   subnets            = var.public_subnet
 
   tags = {
@@ -87,7 +87,7 @@ resource "aws_lb" "app_alb" {
   name               = "Internal-app-alb"
   internal           = true
   load_balancer_type = "application"
-  security_groups    = var.internal-lb-sg
+  security_groups    = [var.internal-lb-sg]
   subnets            = var.private_subnet
 
   tags = {
