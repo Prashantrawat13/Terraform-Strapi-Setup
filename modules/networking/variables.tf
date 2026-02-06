@@ -3,10 +3,10 @@ variable "vpc_cidr" {
   type        = string
 }
 
-variable "public_subnet_CIDR" {
-  description = "The CIDR block for the public subnet 1"
-  type        = string
-}
+# variable "public_subnet_CIDR" {
+#   description = "The CIDR block for the public subnet 1"
+#   type        = string
+# }
 
 variable "public_sub_count" {
   description = "Number of public subnets"
@@ -14,10 +14,10 @@ variable "public_sub_count" {
 }
 
 
-variable "private_subnet_CIDR" {
-  description = "The CIDR block for the private subnet 1"
-  type        = string
-}
+# variable "private_subnet_CIDR" {
+#   description = "The CIDR block for the private subnet 1"
+#   type        = string
+# }
 
 variable "private_sub_count" {
   description = "Number of private subnets"

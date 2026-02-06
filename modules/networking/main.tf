@@ -3,7 +3,7 @@
 resource "aws_vpc" "my_vpc" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
-  enable_dns_support = "ap-south-1"
+  enable_dns_support   = "true"
   tags = {
     Name = "My_VPC"
   }
@@ -18,15 +18,15 @@ data "aws_availability_zones" "available" {
 ##### Public Subnet #####          || Web-Tier
 
 resource "aws_subnet" "public_subnet" {
-  count = var.public_sub_count
+  count                   = var.public_sub_count
   vpc_id                  = aws_vpc.my_vpc.id
-  cidr_block              = var.public_subnet_CIDR
+  cidr_block              = "10.0.${10 + count.index}.0/24"
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "Public_Subnet${count.index + 1}" 
-}
+    Name = "Public_Subnet${count.index + 1}"
+  }
 }
 
 
@@ -73,7 +73,7 @@ resource "aws_route_table_association" "public_rt_1" {
 resource "aws_subnet" "private_subnet" {
   count                   = var.private_sub_count
   vpc_id                  = aws_vpc.my_vpc.id
-  cidr_block              = var.private_subnet_CIDR
+  cidr_block              = "10.0.${20 + count.index}.0/24"
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = false
   tags = {
@@ -93,7 +93,7 @@ resource "aws_eip" "nat_eip" {
 
 resource "aws_nat_gateway" "my_nat_gw" {
   allocation_id = aws_eip.nat_eip.id
-  subnet_id     = aws_subnet.public_subnet[0].id
+  subnet_id     = aws_subnet.public_subnet[1].id
   tags = {
     Name = "My_Nat_Gateway"
   }
@@ -114,7 +114,7 @@ resource "aws_route_table" "private_rt" {
 resource "aws_route" "Private-RT-route" {
   route_table_id         = aws_route_table.private_rt.id
   destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_nat_gateway.my_nat_gw.id
+  nat_gateway_id         = aws_nat_gateway.my_nat_gw.id
 
 }
 
@@ -170,19 +170,19 @@ resource "aws_security_group" "external-lb-sg" {
   vpc_id      = aws_vpc.my_vpc.id
 
   ingress {
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-    description     = "Allow Http inbound traffic from Internet"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    description = "Allow Http inbound traffic from Internet"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    description     = "Allow Https inbound traffic from Internet"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    description = "Allow Https inbound traffic from Internet"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
 
@@ -223,7 +223,7 @@ resource "aws_security_group" "web-tier-sg" {
     to_port         = 443
     protocol        = "tcp"
     description     = "Allow Https inbound traffic from external-lb-sg"
-    security_groups = [aws_security_group.external-lb-sg.id] 
+    security_groups = [aws_security_group.external-lb-sg.id]
   }
 
 
@@ -264,7 +264,7 @@ resource "aws_security_group" "internal-lb-sg" {
     to_port         = 443
     protocol        = "tcp"
     description     = "Allow https inbound traffic from Internal SG"
-    security_groups = [aws_security_group.web-tier-sg.id] 
+    security_groups = [aws_security_group.web-tier-sg.id]
   }
 
   egress {
@@ -283,9 +283,9 @@ resource "aws_security_group" "internal-lb-sg" {
 
 resource "aws_security_group" "app-tier-sg" {
   name        = "App_Tier_SG"
-  description = "Allow All Traffic from the Internal-LB-SG" 
+  description = "Allow All Traffic from the Internal-LB-SG"
   vpc_id      = aws_vpc.my_vpc.id
-  
+
   ingress {
     from_port       = 80
     to_port         = 80
@@ -299,7 +299,7 @@ resource "aws_security_group" "app-tier-sg" {
     to_port         = 443
     protocol        = "tcp"
     description     = "Allow https inbound traffic from internal-lb-sg"
-    security_groups = [aws_security_group.internal-lb-sg.id] 
+    security_groups = [aws_security_group.internal-lb-sg.id]
   }
 
   egress {
@@ -312,4 +312,4 @@ resource "aws_security_group" "app-tier-sg" {
   tags = {
     Name = "App_Tier_SG"
   }
-  }
+}
